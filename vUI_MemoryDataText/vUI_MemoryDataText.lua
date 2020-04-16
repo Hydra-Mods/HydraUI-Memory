@@ -41,6 +41,7 @@ local OnEnter = function(self)
 	GameTooltip:AddLine(Label)
 	GameTooltip:AddLine(" ")
 	
+	-- Get addon information and put it into the sorting table
 	for i = 1, GetNumAddOns() do
 		if IsAddOnLoaded(i) then
 			Name = select(2, GetAddOnInfo(i))
@@ -54,9 +55,11 @@ local OnEnter = function(self)
 		end
 	end
 	
+	-- Sort information
 	table.sort(Sorted, Sort)
 	
-	for i = 1, #Sorted do
+	-- Show up to 30 entries
+	for i = 1, (#Sorted > 30 and 30 or #Sorted) do
 		if (Sorted[i][2] > 999) then
 			Memory = ((Sorted[i][2] / 1024) * 10) / 10
 			
@@ -68,6 +71,13 @@ local OnEnter = function(self)
 		end
 	end
 	
+	-- If we exceeded the limit, tell the user how many were omitted
+	if (#Sorted > 30) then
+		GameTooltip:AddLine(" ")
+		GameTooltip:AddLine(format(Language["%s more addons are not shown"], #Sorted - 30))
+	end
+	
+	-- Clear the sorting table for next use
 	for i = 1, #Sorted do
 		tinsert(TablePool, tremove(Sorted, 1))
 	end
