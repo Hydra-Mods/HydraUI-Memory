@@ -5,16 +5,38 @@ local MemoryDT = vUI:NewPlugin(AddOn)
 local DT = vUI:GetModule("DataText")
 
 local format = format
+local tinsert = tinsert
+local tremove = tremove
 local GetNumAddOns = GetNumAddOns
 local GetAddOnInfo = GetAddOnInfo
 local IsAddOnLoaded = IsAddOnLoaded
 local UpdateAddOnMemoryUsage = UpdateAddOnMemoryUsage
 local Label = Language["Memory"]
 
+local Sorted = {}
+local TablePool = {}
+
+local GetTable = function()
+	local Table
+	
+	if TablePool[1] then
+		Table = tremove(TablePool, 1)
+	else
+		Table = {}
+	end
+	
+	return Table
+end
+
+local Sort = function(a, b)
+	return a[2] > b[2]
+end
+
 local OnEnter = function(self)
 	GameTooltip_SetDefaultAnchor(GameTooltip, self)
 	
 	local Name
+	local Table
 	local Memory = 0
 	
 	GameTooltip:AddLine(Label)
@@ -23,18 +45,32 @@ local OnEnter = function(self)
 	for i = 1, GetNumAddOns() do
 		if IsAddOnLoaded(i) then
 			Name = select(2, GetAddOnInfo(i))
-			Memory =  GetAddOnMemoryUsage(i)
+			Memory = GetAddOnMemoryUsage(i)
+			Table = GetTable()
 			
-			if (Memory > 999) then
-				Memory = ((Memory / 1024) * 10) / 10
-				
-				GameTooltip:AddDoubleLine(Name, format("%.2f mb", Memory), 1, 1, 1)
-			else
-				Memory = (Memory * 10) / 10
-				
-				GameTooltip:AddDoubleLine(Name, format("%.0f kb", Memory), 1, 1, 1)
-			end
+			Table[1] = Name
+			Table[2] = Memory
+			
+			tinsert(Sorted, Table)
 		end
+	end
+	
+	table.sort(Sorted, Sort)
+	
+	for i = 1, #Sorted do
+		if (Sorted[i][2] > 999) then
+			Memory = ((Sorted[i][2] / 1024) * 10) / 10
+			
+			GameTooltip:AddDoubleLine(Sorted[i][1], format("%.2f mb", Memory), 1, 1, 1)
+		else
+			Memory = (Sorted[i][2] * 10) / 10
+			
+			GameTooltip:AddDoubleLine(Sorted[i][1], format("%.0f kb", Memory), 1, 1, 1)
+		end
+	end
+	
+	for i = 1, #Sorted do
+		tinsert(TablePool, tremove(Sorted, 1))
 	end
 	
 	GameTooltip:Show()
