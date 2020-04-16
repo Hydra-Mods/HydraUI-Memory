@@ -2,7 +2,6 @@ local AddOn = ...
 local vUI, GUI, Language, Media, Settings = vUIGlobal:get()
 
 local MemoryDT = vUI:NewPlugin(AddOn)
-local DT = vUI:GetModule("DataText")
 
 local format = format
 local tinsert = tinsert
@@ -126,4 +125,4 @@ local OnDisable = function(self)
 	self.Text:SetText("")
 end
 
-DT:SetType(Label, OnEnable, OnDisable, Update)
+vUI:AddDataText(Label, OnEnable, OnDisable, Update)
