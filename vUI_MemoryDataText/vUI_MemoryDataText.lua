@@ -1,12 +1,10 @@
-local AddOn = ...
-
 if (not vUIGlobal) then -- vUI wasn't found
 	return
 end
 
 local vUI, GUI, Language, Media, Settings = vUIGlobal:get()
 
---local MemoryDT = vUI:NewPlugin(AddOn)
+--local MemoryDT = vUI:NewPlugin("vUI_MemoryDataText")
 
 local format = format
 local tinsert = tinsert
@@ -36,16 +34,27 @@ local Sort = function(a, b)
 	return a[2] > b[2]
 end
 
+local GetMemory = function(kb)
+	if (kb > 1024) then
+		return format("%.2f", (kb / 1024)), "mb"
+	else
+		return format("%.2f", kb), "kb"
+	end
+end
+
 local OnEnter = function(self)
 	GameTooltip_SetDefaultAnchor(GameTooltip, self)
 	
 	local Name
 	local Table
-	local Memory = 0
+	local Memory = collectgarbage("count")
 	
 	UpdateAddOnMemoryUsage()
 	
-	GameTooltip:AddLine(Label)
+	local Value, Unit = GetMemory(Memory)
+	
+	GameTooltip:AddDoubleLine(Language["Lua Memory"], format("%s %s", Value, Unit), 1, 1, 1)
+	GameTooltip:AddDoubleLine(Language["Add-On Memory"], self.Text:GetText())
 	GameTooltip:AddLine(" ")
 	
 	-- Get addon information and put it into the sorting table
@@ -67,15 +76,9 @@ local OnEnter = function(self)
 	
 	-- Show up to 30 entries
 	for i = 1, (#Sorted > 30 and 30 or #Sorted) do
-		if (Sorted[i][2] > 999) then
-			Memory = ((Sorted[i][2] / 1024) * 10) / 10
-			
-			GameTooltip:AddDoubleLine(Sorted[i][1], format("%.2f mb", Memory), 1, 1, 1)
-		else
-			Memory = (Sorted[i][2] * 10) / 10
-			
-			GameTooltip:AddDoubleLine(Sorted[i][1], format("%.0f kb", Memory), 1, 1, 1)
-		end
+		local Value, Unit = GetMemory(Sorted[i][2])
+	
+		GameTooltip:AddDoubleLine(Sorted[i][1], format("%s %s", Value, Unit), 1, 1, 1)
 	end
 	
 	-- If we exceeded the limit, tell the user how many were omitted
@@ -102,28 +105,23 @@ local Update = function(self, elapsed)
 	if (self.Elapsed > 60) then
 		UpdateAddOnMemoryUsage()
 		
-		local Memory = 0
+		local TotalMemory = 0
 		
 		for i = 1, GetNumAddOns() do
-			Memory = Memory + GetAddOnMemoryUsage(i)
+			TotalMemory = TotalMemory + GetAddOnMemoryUsage(i)
 		end
 		
-		if (Memory > 999) then
-			Memory = ((Memory / 1024) * 10) / 10
-			
-			self.Text:SetFormattedText("|cff%s%.2f|r |cff%smb|r", Settings["data-text-label-color"], Memory, Settings["data-text-value-color"])
-		else
-			Memory = (Memory * 10) / 10
-			
-			self.Text:SetFormattedText("|cff%s%.2f|r |cff%skb|r", Settings["data-text-label-color"], Memory, Settings["data-text-value-color"])
-		end
+		local Value, Unit = GetMemory(TotalMemory)
+		
+		self.Text:SetFormattedText("|cff%s%.2f|r |cff%s%s|r", Settings["data-text-label-color"], Value, Settings["data-text-value-color"], Unit)
 		
 		self.Elapsed = 0
+		self.MemoryValue = TotalMemory
 	end
 end
 
 local OnMouseUp = function(self)
-	collectgarbage("collect")
+	collectgarbage()
 	
 	self:Update(61)
 	
@@ -138,6 +136,7 @@ local OnEnable = function(self)
 	self:SetScript("OnMouseUp", OnMouseUp)
 	
 	self.Elapsed = 0
+	self.MemoryValue = 0
 	
 	self:Update(61)
 end
