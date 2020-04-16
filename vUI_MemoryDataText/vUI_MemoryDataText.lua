@@ -1,7 +1,12 @@
 local AddOn = ...
+
+if (not vUIGlobal) then -- vUI wasn't found
+	return
+end
+
 local vUI, GUI, Language, Media, Settings = vUIGlobal:get()
 
-local MemoryDT = vUI:NewPlugin(AddOn)
+--local MemoryDT = vUI:NewPlugin(AddOn)
 
 local format = format
 local tinsert = tinsert
@@ -37,6 +42,8 @@ local OnEnter = function(self)
 	local Name
 	local Table
 	local Memory = 0
+	
+	UpdateAddOnMemoryUsage()
 	
 	GameTooltip:AddLine(Label)
 	GameTooltip:AddLine(" ")
@@ -115,10 +122,20 @@ local Update = function(self, elapsed)
 	end
 end
 
+local OnMouseUp = function(self)
+	collectgarbage("collect")
+	
+	self:Update(61)
+	
+	GameTooltip:Hide()
+	OnEnter(self)
+end
+
 local OnEnable = function(self)
 	self:SetScript("OnUpdate", Update)
 	self:SetScript("OnEnter", OnEnter)
 	self:SetScript("OnLeave", OnLeave)
+	self:SetScript("OnMouseUp", OnMouseUp)
 	
 	self.Elapsed = 0
 	
@@ -129,6 +146,7 @@ local OnDisable = function(self)
 	self:SetScript("OnUpdate", nil)
 	self:SetScript("OnEnter", nil)
 	self:SetScript("OnLeave", nil)
+	self:SetScript("OnMouseUp", nil)
 	
 	self.Elapsed = 0
 	
