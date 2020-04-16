@@ -45,16 +45,13 @@ end
 local OnEnter = function(self)
 	GameTooltip_SetDefaultAnchor(GameTooltip, self)
 	
-	local Name
-	local Table
+	local Name, Table
 	local Memory = collectgarbage("count")
 	
 	UpdateAddOnMemoryUsage()
 	
-	local Value, Unit = GetMemory(Memory)
-	
-	GameTooltip:AddDoubleLine(Language["Lua Memory"], format("%s %s", Value, Unit), 1, 1, 1)
-	GameTooltip:AddDoubleLine(Language["Add-On Memory"], self.Text:GetText())
+	GameTooltip:AddDoubleLine(Language["Lua Memory"], format("%s %s", GetMemory(Memory)), 1, 1, 1)
+	GameTooltip:AddDoubleLine(Language["Add-On Memory"], format("%s %s", GetMemory(self.MemoryValue)), 1, 1, 1)
 	GameTooltip:AddLine(" ")
 	
 	-- Get addon information and put it into the sorting table
@@ -76,9 +73,7 @@ local OnEnter = function(self)
 	
 	-- Show up to 30 entries
 	for i = 1, (#Sorted > 30 and 30 or #Sorted) do
-		local Value, Unit = GetMemory(Sorted[i][2])
-	
-		GameTooltip:AddDoubleLine(Sorted[i][1], format("%s %s", Value, Unit), 1, 1, 1)
+		GameTooltip:AddDoubleLine(Sorted[i][1], format("%s %s", GetMemory(Sorted[i][2])), 1, 1, 1)
 	end
 	
 	-- If we exceeded the limit, tell the user how many were omitted
