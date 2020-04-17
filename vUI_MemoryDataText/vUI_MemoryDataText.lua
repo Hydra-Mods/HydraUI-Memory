@@ -38,7 +38,7 @@ local GetMemory = function(kb)
 	if (kb > 1024) then
 		return format("%.2f", (kb / 1024)), "mb"
 	else
-		return format("%.2f", kb), "kb"
+		return format("%.0f", kb), "kb"
 	end
 end
 
