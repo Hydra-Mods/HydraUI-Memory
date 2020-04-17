@@ -71,19 +71,21 @@ local OnEnter = function(self)
 	-- Sort information
 	table.sort(Sorted, Sort)
 	
+	local Max = #Sorted
+	
 	-- Show up to 30 entries
-	for i = 1, (#Sorted > 30 and 30 or #Sorted) do
+	for i = 1, (Max > 30 and 30 or Max) do
 		GameTooltip:AddDoubleLine(Sorted[i][1], format("%s %s", GetMemory(Sorted[i][2])), 1, 1, 1)
 	end
 	
 	-- If we exceeded the limit, tell the user how many were omitted
-	if (#Sorted > 30) then
+	if (Max > 30) then
 		GameTooltip:AddLine(" ")
-		GameTooltip:AddLine(format(Language["%s more addons are not shown"], #Sorted - 30))
+		GameTooltip:AddLine(format(Language["%s more addons are not shown"], Max - 30))
 	end
 	
 	-- Clear the sorting table for next use
-	for i = 1, #Sorted do
+	for i = 1, Max do
 		tinsert(TablePool, tremove(Sorted, 1))
 	end
 	
