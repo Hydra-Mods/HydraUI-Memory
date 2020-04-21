@@ -4,7 +4,7 @@ end
 
 local vUI, GUI, Language, Media, Settings = vUIGlobal:get()
 
---local MemoryDT = vUI:NewPlugin("vUI_MemoryDataText")
+local MemoryDT = vUI:NewPlugin("vUI_MemoryDataText")
 
 local format = format
 local tinsert = tinsert
