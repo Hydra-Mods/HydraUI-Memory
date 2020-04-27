@@ -1,4 +1,4 @@
-if (not vUIGlobal) then -- vUI wasn't found
+if (not vUIGlobal) then
 	return
 end
 
@@ -17,18 +17,6 @@ local Label = Language["Memory"]
 
 local Sorted = {}
 local TablePool = {}
-
-local GetTable = function()
-	local Table
-	
-	if TablePool[1] then
-		Table = tremove(TablePool, 1)
-	else
-		Table = {}
-	end
-	
-	return Table
-end
 
 local Sort = function(a, b)
 	return a[2] > b[2]
@@ -59,7 +47,7 @@ local OnEnter = function(self)
 		if IsAddOnLoaded(i) then
 			Name = select(2, GetAddOnInfo(i))
 			Memory = GetAddOnMemoryUsage(i)
-			Table = GetTable()
+			Table = TablePool[1] and tremove(TablePool, 1) or {}
 			
 			Table[1] = Name
 			Table[2] = Memory
