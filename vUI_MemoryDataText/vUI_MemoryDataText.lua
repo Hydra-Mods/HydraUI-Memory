@@ -4,14 +4,14 @@ end
 
 local vUI, GUI, Language, Media, Settings = vUIGlobal:get()
 
-local MemoryDT = vUI:NewPlugin("vUI_MemoryDataText")
-
+local select = select
 local format = format
 local tinsert = tinsert
 local tremove = tremove
 local GetNumAddOns = GetNumAddOns
 local GetAddOnInfo = GetAddOnInfo
 local IsAddOnLoaded = IsAddOnLoaded
+local GetAddOnMemoryUsage = GetAddOnMemoryUsage
 local UpdateAddOnMemoryUsage = UpdateAddOnMemoryUsage
 local Label = Language["Memory"]
 
@@ -138,3 +138,4 @@ local OnDisable = function(self)
 end
 
 vUI:AddDataText(Label, OnEnable, OnDisable, Update)
+vUI:NewPlugin("vUI_MemoryDataText")
