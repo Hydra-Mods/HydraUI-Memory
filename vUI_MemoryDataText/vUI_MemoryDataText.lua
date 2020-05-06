@@ -31,7 +31,7 @@ local GetMemory = function(kb)
 end
 
 local OnEnter = function(self)
-	GameTooltip_SetDefaultAnchor(GameTooltip, self)
+	self:SetTooltip()
 	
 	local Name, Table
 	local Memory = collectgarbage("count")
