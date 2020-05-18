@@ -3,5 +3,6 @@
 ## Version: 1.05
 ## Title: |cFFFFC44DvUI|r Memory Data Text
 ## Notes: Create a Data Text to display memory usage
+## RequiredDeps: vUI
 
 vUI_MemoryDataText.lua
