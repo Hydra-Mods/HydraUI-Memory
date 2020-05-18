@@ -13,6 +13,7 @@ local GetAddOnInfo = GetAddOnInfo
 local IsAddOnLoaded = IsAddOnLoaded
 local GetAddOnMemoryUsage = GetAddOnMemoryUsage
 local UpdateAddOnMemoryUsage = UpdateAddOnMemoryUsage
+local InCombatLockdown = InCombatLockdown
 local Label = Language["Memory"]
 
 local Sorted = {}
@@ -88,6 +89,10 @@ local Update = function(self, elapsed)
 	self.Elapsed = self.Elapsed + elapsed
 	
 	if (self.Elapsed > 60) then
+		if InCombatLockdown() then
+			return
+		end
+		
 		UpdateAddOnMemoryUsage()
 		
 		local TotalMemory = 0
