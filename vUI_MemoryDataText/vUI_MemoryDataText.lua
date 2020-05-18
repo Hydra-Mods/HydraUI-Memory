@@ -110,7 +110,7 @@ local OnMouseUp = function(self)
 	
 	self:Update(61)
 	
-	GameTooltip:Hide()
+	GameTooltip:ClearLines()
 	OnEnter(self)
 end
 
