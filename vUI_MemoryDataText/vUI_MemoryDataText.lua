@@ -2,7 +2,7 @@ if (not vUIGlobal) then
 	return
 end
 
-local vUI, GUI, Language, Media, Settings = vUIGlobal:get()
+local vUI, GUI, Language, Assets, Settings = vUIGlobal:get()
 
 local select = select
 local format = format
@@ -111,12 +111,18 @@ local Update = function(self, elapsed)
 end
 
 local OnMouseUp = function(self)
-	collectgarbage()
-	
-	self:Update(61)
-	
-	GameTooltip:ClearLines()
-	OnEnter(self)
+	if IsModifierKeyDown() then
+		collectgarbage()
+		
+		self:Update(61)
+		
+		GameTooltip:ClearLines()
+		OnEnter(self)
+	else
+		if AddonList then
+			ToggleFrame(AddonList)
+		end
+	end
 end
 
 local OnEnable = function(self)
