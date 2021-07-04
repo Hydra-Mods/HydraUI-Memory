@@ -1,8 +1,8 @@
-if (not vUIGlobal) then
+if (not HydraUIGlobal) then
 	return
 end
 
-local vUI, GUI, Language, Assets, Settings = vUIGlobal:get()
+local HydraUI, GUI, Language, Assets, Settings = HydraUIGlobal:get()
 
 local select = select
 local format = format
@@ -148,5 +148,5 @@ local OnDisable = function(self)
 	self.Text:SetText("")
 end
 
-vUI:AddDataText(Label, OnEnable, OnDisable, Update)
-vUI:NewPlugin("vUI_MemoryDataText")
+HydraUI:AddDataText(Label, OnEnable, OnDisable, Update)
+HydraUI:NewPlugin("HydraUI_Memory")
