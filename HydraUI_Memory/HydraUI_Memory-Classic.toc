@@ -1,8 +1,0 @@
-## Interface: 11307
-## Author: Hydra
-## Version: 1.04
-## Title: |cFFFFC44DHydra|r|cFFFFFFFFUI Memory|r
-## Notes: Create a data text to display memory usage
-## RequiredDeps: HydraUI
-
-HydraUI_Memory.lua
