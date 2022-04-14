@@ -2,7 +2,7 @@ if (not HydraUIGlobal) then
 	return
 end
 
-local HydraUI, GUI, Language, Assets, Settings = HydraUIGlobal:get()
+local HydraUI, Language, Assets, Settings = HydraUIGlobal:get()
 
 local select = select
 local format = format
