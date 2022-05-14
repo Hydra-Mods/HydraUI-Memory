@@ -89,10 +89,6 @@ local Update = function(self, elapsed)
 	self.Elapsed = self.Elapsed + elapsed
 	
 	if (self.Elapsed > 60) then
-		if InCombatLockdown() then
-			return
-		end
-		
 		UpdateAddOnMemoryUsage()
 		
 		local TotalMemory = 0
@@ -125,11 +121,23 @@ local OnMouseUp = function(self)
 	end
 end
 
+local OnEvent = function(self, event)
+	if (event == "PLAYER_REGEN_DISABLED") then
+		self:SetScript("OnUpdate", nil)
+		self:RegisterEvent("PLAYER_REGEN_ENABLED")
+	else
+		self:SetScript("OnUpdate", Update)
+		self:RegisterEvent("PLAYER_REGEN_DISABLED")
+	end
+end
+
 local OnEnable = function(self)
 	self:SetScript("OnUpdate", Update)
 	self:SetScript("OnEnter", OnEnter)
 	self:SetScript("OnLeave", OnLeave)
 	self:SetScript("OnMouseUp", OnMouseUp)
+	self:RegisterEvent("PLAYER_REGEN_DISABLED")
+	self:SetScript("OnEvent", OnEvent)
 	
 	self.Elapsed = 0
 	self.MemoryValue = 0
