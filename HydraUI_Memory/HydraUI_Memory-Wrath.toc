@@ -1,4 +1,4 @@
-## Interface: 90205
+## Interface: 30400
 ## Author: Hydra
 ## Version: 1.16
 ## Title: |cFFFFC44DHydra|r|cFFFFFFFFUI Memory|r
