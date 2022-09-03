@@ -107,6 +107,10 @@ local Update = function(self, elapsed)
 end
 
 local OnMouseUp = function(self)
+	if InCombatLockdown() then
+		return ERR_NOT_IN_COMBAT
+	end
+	
 	if IsModifierKeyDown() then
 		collectgarbage()
 		

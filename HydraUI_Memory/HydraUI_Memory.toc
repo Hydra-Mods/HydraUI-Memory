@@ -1,6 +1,6 @@
 ## Interface: 90207
 ## Author: Hydra
-## Version: 1.17
+## Version: 1.18
 ## Title: |cFFFFC44DHydra|r|cFFFFFFFFUI Memory|r
 ## Notes: Create a data text to display memory usage
 ## RequiredDeps: HydraUI
