@@ -35,13 +35,10 @@ local OnEnter = function(self)
 	self:SetTooltip()
 	
 	local Name, Table
-	local Memory = collectgarbage("count")
+	local Memory = 0
+	local TotalMemory = 0
 	
-	UpdateAddOnMemoryUsage()
-	
-	GameTooltip:AddDoubleLine(Language["Lua Memory"], format("%s %s", GetMemory(Memory)), 1, 1, 1)
-	GameTooltip:AddDoubleLine(Language["Add-On Memory"], format("%s %s", GetMemory(self.MemoryValue)), 1, 1, 1)
-	GameTooltip:AddLine(" ")
+	self:Update(61)
 	
 	-- Get addon information and put it into the sorting table
 	for i = 1, GetNumAddOns() do
@@ -53,9 +50,14 @@ local OnEnter = function(self)
 			Table[1] = Name
 			Table[2] = Memory
 			
+			TotalMemory = TotalMemory + Memory
+			
 			tinsert(Sorted, Table)
 		end
 	end
+	
+	GameTooltip:AddDoubleLine(Language["Add-On Memory"], format("%s %s", GetMemory(TotalMemory)), 1, 1, 1)
+	GameTooltip:AddLine(" ")
 	
 	-- Sort information
 	table.sort(Sorted, Sort)
@@ -102,7 +104,6 @@ local Update = function(self, elapsed)
 		self.Text:SetFormattedText("|cff%s%.2f|r |cff%s%s|r", Settings["data-text-label-color"], Value, Settings["data-text-value-color"], Unit)
 		
 		self.Elapsed = 0
-		self.MemoryValue = TotalMemory
 	end
 end
 
@@ -144,7 +145,6 @@ local OnEnable = function(self)
 	self:SetScript("OnEvent", OnEvent)
 	
 	self.Elapsed = 0
-	self.MemoryValue = 0
 	
 	self:Update(61)
 end
