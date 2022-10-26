@@ -33,53 +33,48 @@ end
 
 local OnEnter = function(self)
 	self:SetTooltip()
-	
+
 	local Name, Table
 	local Memory = 0
 	local TotalMemory = 0
-	
+
 	self:Update(61)
-	
-	-- Get addon information and put it into the sorting table
+
 	for i = 1, GetNumAddOns() do
 		if IsAddOnLoaded(i) then
 			Name = select(2, GetAddOnInfo(i))
 			Memory = GetAddOnMemoryUsage(i)
 			Table = TablePool[1] and tremove(TablePool, 1) or {}
-			
+
 			Table[1] = Name
 			Table[2] = Memory
-			
+
 			TotalMemory = TotalMemory + Memory
-			
+
 			tinsert(Sorted, Table)
 		end
 	end
-	
+
 	GameTooltip:AddDoubleLine(Language["Add-On Memory"], format("%s %s", GetMemory(TotalMemory)), 1, 1, 1)
 	GameTooltip:AddLine(" ")
-	
-	-- Sort information
+
 	table.sort(Sorted, Sort)
-	
+
 	local Max = #Sorted
-	
-	-- Show up to 30 entries
+
 	for i = 1, (Max > 30 and 30 or Max) do
 		GameTooltip:AddDoubleLine(Sorted[i][1], format("%s %s", GetMemory(Sorted[i][2])), 1, 1, 1)
 	end
-	
-	-- If we exceeded the limit, tell the user how many were omitted
+
 	if (Max > 30) then
 		GameTooltip:AddLine(" ")
 		GameTooltip:AddLine(format(Language["%s more addons are not shown"], Max - 30))
 	end
-	
-	-- Clear the sorting table for next use
+
 	for i = 1, Max do
 		tinsert(TablePool, tremove(Sorted, 1))
 	end
-	
+
 	GameTooltip:Show()
 end
 
@@ -89,20 +84,20 @@ end
 
 local Update = function(self, elapsed)
 	self.Elapsed = self.Elapsed + elapsed
-	
+
 	if (self.Elapsed > 60) then
 		UpdateAddOnMemoryUsage()
-		
+
 		local TotalMemory = 0
-		
+
 		for i = 1, GetNumAddOns() do
 			TotalMemory = TotalMemory + GetAddOnMemoryUsage(i)
 		end
-		
+
 		local Value, Unit = GetMemory(TotalMemory)
-		
-		self.Text:SetFormattedText("|cff%s%.2f|r |cff%s%s|r", Settings["data-text-label-color"], Value, Settings["data-text-value-color"], Unit)
-		
+
+		self.Text:SetFormattedText("|cff%s%.2f|r |cff%s%s|r", Settings["data-text-label-color"], Value, HydraUI.ValueColor, Unit)
+
 		self.Elapsed = 0
 	end
 end
@@ -111,12 +106,12 @@ local OnMouseUp = function(self)
 	if InCombatLockdown() then
 		return ERR_NOT_IN_COMBAT
 	end
-	
+
 	if IsModifierKeyDown() then
 		collectgarbage()
-		
+
 		self:Update(61)
-		
+
 		GameTooltip:ClearLines()
 		OnEnter(self)
 	else
@@ -143,9 +138,9 @@ local OnEnable = function(self)
 	self:SetScript("OnMouseUp", OnMouseUp)
 	self:RegisterEvent("PLAYER_REGEN_DISABLED")
 	self:SetScript("OnEvent", OnEvent)
-	
+
 	self.Elapsed = 0
-	
+
 	self:Update(61)
 end
 
@@ -154,9 +149,9 @@ local OnDisable = function(self)
 	self:SetScript("OnEnter", nil)
 	self:SetScript("OnLeave", nil)
 	self:SetScript("OnMouseUp", nil)
-	
+
 	self.Elapsed = 0
-	
+
 	self.Text:SetText("")
 end
 
