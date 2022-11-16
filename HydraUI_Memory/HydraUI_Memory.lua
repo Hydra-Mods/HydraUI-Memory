@@ -132,12 +132,12 @@ local OnEvent = function(self, event)
 end
 
 local OnEnable = function(self)
+	self:RegisterEvent("PLAYER_REGEN_DISABLED")
+	self:SetScript("OnEvent", OnEvent)
 	self:SetScript("OnUpdate", Update)
 	self:SetScript("OnEnter", OnEnter)
 	self:SetScript("OnLeave", OnLeave)
 	self:SetScript("OnMouseUp", OnMouseUp)
-	self:RegisterEvent("PLAYER_REGEN_DISABLED")
-	self:SetScript("OnEvent", OnEvent)
 
 	self.Elapsed = 0
 
@@ -145,6 +145,8 @@ local OnEnable = function(self)
 end
 
 local OnDisable = function(self)
+	self:UnregisterEvent("PLAYER_REGEN_DISABLED")
+	self:SetScript("OnEvent", nil)
 	self:SetScript("OnUpdate", nil)
 	self:SetScript("OnEnter", nil)
 	self:SetScript("OnLeave", nil)
