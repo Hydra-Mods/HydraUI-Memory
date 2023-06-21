@@ -1,8 +1,9 @@
 ## Interface: 100100
 ## Author: Hydra
-## Version: 1.27
+## Version: 1.28
 ## Title: |cFFFFC44DHydra|r|cFFFFFFFFUI Memory|r
 ## Notes: Create a data text to display memory usage
 ## RequiredDeps: HydraUI
+## IconTexture: Interface\AddOns\HydraUI_Memory\HydraUIBadgeCrisp
 
 HydraUI_Memory.lua
